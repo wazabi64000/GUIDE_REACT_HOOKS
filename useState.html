@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>useState — Wazabi Code</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topnav">
+    <div class="brand">Wazabi Code</div>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="useState.html">useState</a>
+      <a href="useEffect.html">useEffect</a>
+      <a href="useContext.html">useContext</a>
+      <a href="useNavigate.html">useNavigate</a>
+    </nav>
+  </header>
+
+  <main class="wrapper">
+    <div class="header">
+      <h1>useState — explication simple</h1>
+    </div>
+
+    <section class="section">
+      <p>
+        <strong>Idée :</strong> useState permet de garder une information dans le composant.
+        Exemple concret (sans compteur) : <em>garder en mémoire le texte d'un formulaire</em>.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2 class="kicker">Exemple React (snippet)</h2>
+      <p class="code-note">Copie-colle ce code dans un composant React (fichier .jsx) :</p>
+      <pre>
+// ExempleUseState.jsx
+import React, { useState } from "react";
+
+export default function ExempleUseState() {
+  // name = valeur actuelle (chaque frappe)
+  // setName = fonction pour modifier la valeur
+  const [name, setName] = useState("");
+
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;Ton nom&lt;/h2&gt;
+      &lt;input
+        value={name}
+        onChange={(e) =&gt; setName(e.target.value)}
+        placeholder="Écris ton nom"
+      /&gt;
+      &lt;p&gt;Bonjour {name} &lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+      </pre>
+      <p class="code-note">Logique : le state <code>name</code> retient le texte et le réaffiche à chaque modification.</p>
+    </section>
+
+    <section class="section">
+      <h2 class="kicker">Mini-démo (JavaScript pur)</h2>
+      <p class="code-note">Teste la logique sans React — tape un nom et vois l'affichage en direct :</p>
+
+      <div class="demo">
+        <div class="row">
+          <input id="nameInput" class="input" placeholder="Écris ton nom" />
+          <button id="clearName" class="ghost">Effacer</button>
+        </div>
+        <div id="nameDisplay">Bonjour —</div>
+      </div>
+
+      <script>
+        // Demo useState logique en JS pur
+        const input = document.getElementById('nameInput');
+        const display = document.getElementById('nameDisplay');
+        const clearBtn = document.getElementById('clearName');
+
+        // "state" local simulé par une variable — chaque changement réaffiche l'UI
+        let name = "";
+
+        input.addEventListener('input', (e) => {
+          name = e.target.value;           // setName(name)
+          display.textContent = 'Bonjour ' + (name || '—');
+        });
+
+        clearBtn.addEventListener('click', () => {
+          name = "";
+          input.value = "";
+          display.textContent = 'Bonjour —';
+          input.focus();
+        });
+      </script>
+
+      <p class="code-note"> Ce que tu dois retenir : <strong>useState</strong> = mémoire locale d'un composant. Ici on l'a simulée par une variable et un écouteur <code>input</code>.</p>
+    </section>
+
+  </main>
+
+  <footer class="footer"> <small>Wazabi Code — useState • mini-cours</small> </footer>
+</body>
+</html>

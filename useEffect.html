@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>useEffect — Wazabi Code</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topnav">
+    <div class="brand">Wazabi Code</div>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="useState.html">useState</a>
+      <a href="useEffect.html">useEffect</a>
+      <a href="useContext.html">useContext</a>
+      <a href="useNavigate.html">useNavigate</a>
+    </nav>
+  </header>
+
+  <main class="wrapper">
+    <div class="header">
+      <h1>useEffect — explication simple</h1>
+    </div>
+
+    <section class="section">
+      <p>
+        <strong>Idée :</strong> useEffect sert à faire quelque chose quand une valeur change
+        (ou au premier rendu). Exemple concret : <em>sauvegarder automatiquement le texte d'un formulaire dans localStorage</em>.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2 class="kicker">Exemple React (snippet)</h2>
+      <pre>
+// ExempleUseEffect.jsx
+import React, { useState, useEffect } from "react";
+
+export default function ExempleUseEffect() {
+  const [note, setNote] = useState("");
+
+  // Chaque fois que 'note' change, on sauvegarde dans localStorage
+  useEffect(() => {
+    localStorage.setItem("quickNote", note);
+  }, [note]);
+
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;Note rapide&lt;/h2&gt;
+      &lt;textarea value={note} onChange={(e) =&gt; setNote(e.target.value)} /&gt;
+      &lt;p&gt;La note est sauvegardée automatiquement dans ton navigateur.&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+      </pre>
+      <p class="code-note">Logique : useEffect observe la variable <code>note</code> et exécute la sauvegarde chaque fois qu'elle change.</p>
+    </section>
+
+    <section class="section">
+      <h2 class="kicker">Mini-démo (sauvegarde automatique)</h2>
+      <p class="code-note">Tape du texte et recharge la page : le texte est restauré depuis <code>localStorage</code>.</p>
+
+      <div class="demo">
+        <div class="row">
+          <textarea id="noteArea" rows="4" style="min-width:320px" placeholder="Écris une note..."></textarea>
+        </div>
+        <div class="row">
+          <button id="clearNote" class="ghost">Effacer la note</button>
+          <button id="showNote">Afficher valeur (console)</button>
+        </div>
+        <div id="noteSaved" style="margin-top:.6rem;color:#11698e"></div>
+      </div>
+
+      <script>
+        // Demo useEffect-like : sauvegarde automatique dans localStorage
+        const area = document.getElementById('noteArea');
+        const info = document.getElementById('noteSaved');
+        const clearBtn = document.getElementById('clearNote');
+        const showBtn = document.getElementById('showNote');
+
+        // Au chargement, restaurer
+        area.value = localStorage.getItem('quickNote') || '';
+        info.textContent = area.value ? 'Dernière sauvegarde trouvée' : 'Aucune sauvegarde';
+
+        // Simuler useEffect : à chaque modification => sauvegarde
+        area.addEventListener('input', (e) => {
+          const txt = e.target.value;
+          localStorage.setItem('quickNote', txt);
+          info.textContent = 'Sauvegardé à ' + new Date().toLocaleTimeString();
+        });
+
+        clearBtn.addEventListener('click', () => {
+          localStorage.removeItem('quickNote');
+          area.value = '';
+          info.textContent = 'Aucune sauvegarde';
+          area.focus();
+        });
+
+        showBtn.addEventListener('click', () => {
+          console.log('quickNote =', localStorage.getItem('quickNote'));
+          alert('Regarde la console (F12) pour la valeur sauvegardée.');
+        });
+      </script>
+
+      <p class="code-note">✅ Ce que tu dois retenir : <strong>useEffect</strong> = exécuter une action quand une donnée change (ici la sauvegarde automatique).</p>
+    </section>
+
+  </main>
+
+  <footer class="footer"> <small>Wazabi Code — useEffect • mini-cours</small> </footer>
+</body>
+</html>

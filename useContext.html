@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>useContext — Wazabi Code</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topnav">
+    <div class="brand">Wazabi Code</div>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="useState.html">useState</a>
+      <a href="useEffect.html">useEffect</a>
+      <a href="useContext.html">useContext</a>
+      <a href="useNavigate.html">useNavigate</a>
+    </nav>
+  </header>
+
+  <main class="wrapper">
+    <div class="header">
+      <h1>useContext — explication simple</h1>
+    </div>
+
+    <section class="section">
+      <p>
+        <strong>Idée :</strong> useContext permet de partager une donnée entre plusieurs composants 
+        sans passer des props partout. Exemple concret : <em>l'information "utilisateur connecté"</em>.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2 class="kicker">Exemple React (snippet)</h2>
+      <pre>
+// UserContext.jsx
+import React, { createContext, useState, useContext } from "react";
+
+const UserContext = createContext();
+
+export function UserProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const login = (name) =&gt; setUser({ name });
+  const logout = () =&gt; setUser(null);
+  return &lt;UserContext.Provider value={{ user, login, logout }}&gt;{children}&lt;/UserContext.Provider&gt;;
+}
+
+export function useUser() { return useContext(UserContext); }
+
+// Usage (dans un composant)
+// const { user, login, logout } = useUser();
+      </pre>
+      <p class="code-note">Logique : on encapsule l'app avec <code>UserProvider</code>, puis on récupère l'utilisateur partout via <code>useUser()</code>.</p>
+    </section>
+
+    <section class="section">
+      <h2 class="kicker">Mini-démo (simuler contexte global)</h2>
+      <p class="code-note">Cette démo montre un objet <code>appState.user</code> partagé entre 2 "vues" sur la page : connexion et profil.</p>
+
+      <div class="demo">
+        <div class="row">
+          <input id="userName" class="input" placeholder="Nom pour connexion" />
+          <button id="loginBtn">Se connecter</button>
+          <button id="logoutBtn" class="ghost">Se déconnecter</button>
+        </div>
+
+        <div style="margin-top:.8rem; display:flex; gap:1rem; flex-wrap:wrap;">
+          <div style="flex:1; min-width:220px">
+            <strong>Vue A (connexion)</strong>
+            <div id="viewA" style="margin-top:.4rem; padding:.6rem; border-radius:8px; background:#fff"></div>
+          </div>
+          <div style="flex:1; min-width:220px">
+            <strong>Vue B (profil)</strong>
+            <div id="viewB" style="margin-top:.4rem; padding:.6rem; border-radius:8px; background:#fff"></div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // Démo très simple : un "contexte" global simulé par un objet
+        const appState = { user: null };
+        const userNameInput = document.getElementById('userName');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        const viewA = document.getElementById('viewA');
+        const viewB = document.getElementById('viewB');
+
+        function renderViews() {
+          viewA.innerHTML = appState.user ? 'Connecté en tant que <strong>' + appState.user.name + '</strong>' : 'Pas connecté';
+          viewB.innerHTML = appState.user ? '<p>Bonjour <strong>' + appState.user.name + '</strong>!</p>' : '<p>Aucun profil (connecte-toi)</p>';
+        }
+
+        loginBtn.addEventListener('click', () => {
+          const n = userNameInput.value.trim();
+          if (!n) return alert('Écris un nom');
+          appState.user = { name: n }; // login
+          renderViews();
+        });
+
+        logoutBtn.addEventListener('click', () => {
+          appState.user = null; // logout
+          renderViews();
+        });
+
+        // Initial render
+        renderViews();
+      </script>
+
+      <p class="code-note">✅ Ce que tu dois retenir : useContext = partager un état global. Ici on simule ce partage par <code>appState</code> visible dans plusieurs "vues".</p>
+    </section>
+
+  </main>
+
+  <footer class="footer"> <small>Wazabi Code — useContext • mini-cours</small> </footer>
+</body>
+</html>
